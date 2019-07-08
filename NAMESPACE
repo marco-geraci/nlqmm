@@ -1,0 +1,20 @@
+useDynLib(nlqmm, .registration=TRUE)
+
+import("stats")
+import("nlme")
+importFrom("optimx", "optimx")
+import("quantreg")
+importFrom("utils", "packageDescription", "getFromNamespace")
+importFrom("lqmm", "lqmmControl", "theta.z.dim")
+#importFrom("numDeriv", "grad", "hessian")
+importFrom("Rcpp", "evalCpp")
+
+exportPattern("^[[:alpha:]]+")
+export(ranef)
+export(VarCorr)
+
+S3method(predict, nlqmm)
+S3method(print, nlqmm)
+S3method(ranef, nlqmm)
+S3method(VarCorr, nlqmm)
+

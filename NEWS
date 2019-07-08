@@ -1,0 +1,12 @@
+Changes in aqmm
+
+=============================================
+
+Version 1.0 (April 12, 2018)
+
+- First version of add-on package nlqmm
+
+Version 1.1 (February 25, 2019)
+
+- Added weights argument to nlqmm
+
