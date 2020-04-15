@@ -35,7 +35,7 @@ the quantile(s) to be estimated.
 }
   \item{data}{
 an optional data frame containing the variables named in
-   \code{fixed}, \code{random} and \code{group}. By default the variables are taken from the environment from which \code{lqmm} is called.
+   \code{fixed}, \code{random} and \code{group}. By default the variables are taken from the environment from which \code{nlqmm} is called.
 }
   \item{subset}{
 an optional vector specifying a subset of observations to be used in the fitting process.
@@ -59,7 +59,7 @@ an optional list of initial (crude) estimates for the fixed effects (see details
 }
 
 \item{gradHess}{
-	logical flag. If \code{TRUE} gradient and Hessian of the log-likelihood be calculated numerically with code{numDeriv}.
+	logical flag. If \code{TRUE} gradient and Hessian of the log-likelihood be calculated numerically with \code{numDeriv}. See details.
 }
  \item{fit}{
 logical flag. If \code{FALSE} the function returns a list of arguments for fitting.
@@ -68,13 +68,15 @@ logical flag. If \code{FALSE} the function returns a list of arguments for fitti
 
 
 \details{
-The function computes an estimate on the tau-th quantile function of the response, conditional on the covariates, as specified by the \code{formula} argument, and on random effects, as specified by the \code{random} argument. The quantile predictor is assumed to be nonlinear. The function maximizes the (log)likelihood of the Laplace regression proposed by Geraci (2017) using a Laplacian approximation of the likelihood. The optimization algorithm minimizes the negative smoothed Laplace log--likelihood using \code{\link{optim}}. The available options are the Nelder-Mead and BFGS algorithms which are specified via the argument \code{method} in \code{\link{nlqmmControl}}.
+The function computes an estimate on the tau-th quantile function of the response, conditional on the covariates, as specified by the \code{formula} argument, and on random effects, as specified by the \code{random} argument. The quantile predictor is assumed to be nonlinear. The function maximizes the (log)likelihood of the Laplace regression proposed by Geraci (2019) using a Laplacian approximation of the likelihood. The optimization algorithm minimizes the negative smoothed Laplace log--likelihood using \code{\link{optim}}. The available options are the Nelder-Mead and BFGS algorithms which are specified via the argument \code{method} in \code{\link{nlqmmControl}}.
 
 Optional starting values for the fixed effects are provided via \code{start}. Parameters are named internally as \code{b1}, \code{b2}, ... See examples further below. These values are then passed on to the initialization algorithm (see \code{\link{nlqmmControl}}) which provides the initial values to the \code{nlqmm} algorithm.
 
 Different standard types of positive--definite matrices for the random effects can be specified: \code{pdIdent} multiple of an identity; \code{pdCompSymm} compound symmetry structure (constant diagonal and constant off--diagonal elements); \code{pdDiag} diagonal; \code{pdSymm} general positive--definite matrix, with no additional structure.
 
 Weights are assumed to be the same for all observations within the same cluster. Weights must be strictly positive. These represent likelihood weights: the larger the weight for a cluster, the more importance is given to the cluster during estimation.
+
+If \code{gradHess = TRUE}, the gradient and Hessian of the log-likelihood are calculated at the optimum. The results are stored as attributes of \code{logLik} and can be extracted via \code{\link{logLik.nlqmm}}. If calculation fails, a warning will be printed out.
 }
 
 \value{
@@ -84,7 +86,7 @@ Weights are assumed to be the same for all observations within the same cluster.
 \references{
 Chen C. (2007). A finite smoothing algorithm for quantile regression. Journal of Computational and Graphical Statistics, 16(1), 136-164.
 
-Geraci M (2017). Nonlinear quantile mixed models. ArXiv e-prints, 1712.09981. Available at \url{https://arxiv.org/abs/1712.09981}.
+Geraci M. (2019). Modelling and estimation of nonlinear quantile regression with clustered data. Computational Statistics and Data Analysis, 136, 30-46.
 }
 
 \author{

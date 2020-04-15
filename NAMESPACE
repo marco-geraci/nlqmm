@@ -17,4 +17,4 @@ S3method(predict, nlqmm)
 S3method(print, nlqmm)
 S3method(ranef, nlqmm)
 S3method(VarCorr, nlqmm)
-
+S3method(logLik, nlqmm)

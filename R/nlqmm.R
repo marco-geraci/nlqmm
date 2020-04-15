@@ -282,19 +282,27 @@ logLik <- do.call(loglik_nlqmm, args = FIT_ARGS[match(names(formals(loglik_nlqmm
 FIT_ARGS$sigma <- attributes(logLik)$sigma
 FIT_ARGS$ranef <- do.call(modalRe_nlqmm, args = FIT_ARGS[match(names(formals(modalRe_nlqmm)), names(FIT_ARGS))])
 logLik <- -do.call(loglik_nlqmm, args = FIT_ARGS[match(names(formals(loglik_nlqmm)), names(FIT_ARGS))])
+FIT_ARGS$sigma <- attributes(logLik)$sigma
 
 # Gradient and Hessian of loglike is time consuming
 if(gradHess){
-	attr(logLik, "grad") <- -do.call(numDeriv::grad, args = c(list(func = loglik_nlqmm, x = FIT_ARGS$theta), FIT_ARGS[-c(1)]))
-	attr(logLik, "hessian") <- -do.call(numDeriv::hessian, args = c(list(func = loglik_nlqmm, x = FIT_ARGS$theta), FIT_ARGS[-c(1)]))
+	d1 <- try(-do.call(numDeriv::grad, args = c(list(func = loglik_nlqmm, x = FIT_ARGS$theta), FIT_ARGS[-c(match(c("theta","analytic","REoptimizer","REcontrol"), names(FIT_ARGS)))])), silent = TRUE)
+	d2 <- try(-do.call(numDeriv::hessian, args = c(list(func = loglik_nlqmm, x = FIT_ARGS$theta), FIT_ARGS[-c(match(c("theta","analytic","REoptimizer","REcontrol"), names(FIT_ARGS)))])), silent = TRUE)
+	if(inherits(d1, "try-error")) {d1 <- NULL; warning("Calculation of gardient failed")}
+	if(inherits(d2, "try-error")) {d2 <- NULL; warning("Calculation of Hessian failed")}
+} else {
+	d1 <- NULL
+	d2 <- NULL
 }
 
 fit <- list()
 fit$theta_x <- FIT_ARGS$theta[1:dim_theta[1]];
 fit$theta_z <- FIT_ARGS$theta[(dim_theta[1] + 1) : (dim_theta[1] + dim_theta_z)]
-fit$sigma <- attributes(logLik)$sigma
+fit$sigma <- FIT_ARGS$sigma
 fit$ranef <- FIT_ARGS$ranef
 fit$logLik <- as.numeric(logLik)
+attr(fit$logLik, "grad") <- d1
+attr(fit$logLik, "hessian") <- d2
 fit$residuals <- attr(logLik, "resid")
 fit$fitted <- attr(logLik, "fitted")
 fit$omega <- FIT_ARGS$omega
@@ -686,24 +694,33 @@ return(val)
 
 }
 
-bootData <- function(x, group, numeric = TRUE){
+#' @export
+logLik.nlqmm <- function(object, ...){
+	ans <- object$logLik
+	attr(ans, "df") <- object$df
+	return(-ans)
 
-group.old <- group
+}
+
+
+bootData <- function(x, .group, numeric = TRUE){
+
+group.old <- .group
 	if(is.factor(group.old)){
 		if(numeric){
-			group <- as.numeric(levels(group))[group]
+			.group <- as.numeric(levels(.group))[.group]
 		} else {
-			group <- as.character(levels(group))[group]
+			.group <- as.character(levels(.group))[.group]
 		}
 	}
-x <- x[order(group),]
-group <- sort(group)
-grp <- unique(group)
+x <- x[order(.group),]
+.group <- sort(.group)
+grp <- unique(.group)
 M <- length(grp)
-n <- table(group)
+n <- table(.group)
 
 id <- sort(sample(grp, M, replace = TRUE))
-dd <- do.call("rbind", lapply(id, function(i) subset(x, group == i)))
+dd <- do.call("rbind", lapply(id, function(i) subset(x, .group == i)))
 
 nid <- rep(grp, n[id])
 if(is.factor(group.old)){

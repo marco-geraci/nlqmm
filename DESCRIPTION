@@ -1,14 +1,16 @@
 Package: nlqmm
 Type: Package
 Title: Nonlinear Quantile Mixed Models
-Version: 1.1
-Date: 2019-02-25
-Author: Marco Geraci
+Version: 1.2
+Date: 2020-04-15
+Author: person(given="Marco", family="Geraci", role=c("aut", "cph", "cre"), email="geraci@mailbox.sc.edu", comment = c(ORCID = "0000-0002-6311-8685"))
 Maintainer: Marco Geraci <geraci@mailbox.sc.edu>
 Depends: R (>= 3.0.0), lqmm
 Imports: stats, utils, nlme (>= 3.1-124), optimx, quantreg, Rcpp (>= 0.12.13), SparseGrid
 LinkingTo: Rcpp
 Suggests: numDeriv
-Description: This is an add-on for the R package lqmm to fit nonlinear quantile mixed models.
+Description: This is an add-on for the R package lqmm to fit nonlinear quantile mixed models
+	as described in Geraci (2019, Computational Statistics and Data Analysis)
+	<doi:10.1016/j.csda.2018.12.005>.
 License: GPL (>= 2)
 LazyLoad: yes

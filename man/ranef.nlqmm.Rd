@@ -33,7 +33,7 @@ a vector of predicted random effects.
 }
 
 \references{
-Geraci M (2017). Nonlinear quantile mixed models. ArXiv e-prints, 1712.09981. Available at \url{https://arxiv.org/abs/1712.09981}.
+Geraci M (2019). Modelling and estimation of nonlinear quantile regression with clustered data. Computational Statistics and Data Analysis, 136, 30-46.
 }
 
 
